@@ -1,19 +1,17 @@
-import { Text, View, StyleSheet } from "react-native"
+import { View, Image, TouchableOpacity } from "react-native"
 import { styles } from "./styles"
 import { colors } from "@/styles/colors"
+import { MaterialIcons } from "@expo/vector-icons"
 
 export default function Index() {
     return (
         <View style={styles.container}>
-            <Text style={{color: "red", fontSize: 22}}>Hello</Text>
-            <Text style={localStyles.title}>React-native</Text>
+            <View style={styles.header}>
+                <Image source={require("@/assets/logo.png")} style={styles.logo}></Image>
+                <TouchableOpacity>
+                    <MaterialIcons name="add" size={32} color={colors.green[300]} />
+                </TouchableOpacity>
+            </View>
         </View>
     )
 }
-
-const localStyles = StyleSheet.create({
-    title: {
-        color: colors.green[900],
-        fontSize: 32,
-    }, 
-})
