@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet } from "react-native"
 import { styles } from "./styles"
-import { colors } from "../../styles/colors"
+import { colors } from "@/styles/colors"
 
 export default function Index() {
     return (
