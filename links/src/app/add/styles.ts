@@ -22,4 +22,8 @@ export const styles = StyleSheet.create({
         paddingHorizontal: 24,
         color: colors.gray[400],
     },
+    form: {
+        padding: 24,
+        gap: 16,
+    },
 })
