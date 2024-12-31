@@ -1,9 +1,10 @@
-import { View, Image, TouchableOpacity, FlatList } from "react-native"
+import { View, Image, TouchableOpacity, FlatList, Modal, Text } from "react-native"
 import { styles } from "./styles"
 import { colors } from "@/styles/colors"
 import { MaterialIcons } from "@expo/vector-icons"
 import { Categories } from "@/components/categories"
 import { Link } from "@/components/link"
+import { Option } from "@/components/option"
 
 export default function Index() {
     return (
@@ -24,6 +25,24 @@ export default function Index() {
             contentContainerStyle={styles.linksContainer}
             showsVerticalScrollIndicator={false}
             />
+            <Modal transparent visible={true}>
+                <View style={styles.modal}>
+                    <View style={styles.modalContent}>
+                        <View style={styles.modalHeader}>
+                            <Text style={styles.modalCategory}>Site</Text>
+                            <TouchableOpacity>
+                               <MaterialIcons name="close" size={20} color={colors.gray[400]}/>
+                            </TouchableOpacity>
+                        </View>
+                        <Text style={styles.modaLinkName}>Portfolio</Text>
+                        <Text style={styles.modaUrl}>thiagomota.tech</Text>
+                        <View style={styles.modalFooter}>
+                            <Option name="Excluir" icon="delete" variant="secondary"/>
+                            <Option name="Abrir" icon="language" />
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </View>
     )
 }
