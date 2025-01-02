@@ -13,6 +13,8 @@ import { LinkStorage, linkStorage } from "@/storage/link-storage"
 export default function Index() {
     const [category, setCategory] = useState(categories[0].name)
     const [links, setLinks] = useState<LinkStorage[]>([])
+    const [link, setLink] = useState<LinkStorage>({} as LinkStorage)
+    const [showModal, setShowModal] = useState(false)
     async function getLinks() {
         try {
             const response = await linkStorage.get()
@@ -22,6 +24,11 @@ export default function Index() {
             Alert.alert("Erro", "Não foi possivel salvar o link")
             console.log(error) 
         }
+    }
+
+    function handleDetails(selected: LinkStorage) {
+        setShowModal(true)
+        setLink(selected)
     }
 
     useFocusEffect(useCallback(() => {
@@ -40,23 +47,23 @@ export default function Index() {
             <Categories onChange={setCategory} selected={category} />
 
             <FlatList data={links} keyExtractor={item => item.id} renderItem={({item}) => (
-                <Link name={item.name} url={item.url} onDetails={() => console.log("Clicou!")}/>  
+                <Link name={item.name} url={item.url} onDetails={() => handleDetails(item)}/>  
             )}
             style={styles.links}
             contentContainerStyle={styles.linksContainer}
             showsVerticalScrollIndicator={false}
             />
-            <Modal transparent visible={false}>
+            <Modal transparent visible={showModal} animationType="slide">
                 <View style={styles.modal}>
                     <View style={styles.modalContent}>
                         <View style={styles.modalHeader}>
-                            <Text style={styles.modalCategory}>Site</Text>
-                            <TouchableOpacity>
-                               <MaterialIcons name="close" size={20} color={colors.gray[400]}/>
+                            <Text style={styles.modalCategory}>{link.category}</Text>
+                            <TouchableOpacity onPress={() => setShowModal(false)}>
+                               <MaterialIcons name="close" size={20} color={colors.gray[400]} />
                             </TouchableOpacity>
                         </View>
-                        <Text style={styles.modaLinkName}>Portfolio</Text>
-                        <Text style={styles.modaUrl}>thiagomota.tech</Text>
+                        <Text style={styles.modaLinkName}>{link.name}</Text>
+                        <Text style={styles.modaUrl}>{link.url}</Text>
                         <View style={styles.modalFooter}>
                             <Option name="Excluir" icon="delete" variant="secondary"/>
                             <Option name="Abrir" icon="language" />
