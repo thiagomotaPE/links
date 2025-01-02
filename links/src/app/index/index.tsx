@@ -1,5 +1,5 @@
-import { useState } from "react"
-import { View, Image, TouchableOpacity, FlatList, Modal, Text } from "react-native"
+import { useState, useEffect } from "react"
+import { View, Image, TouchableOpacity, FlatList, Modal, Text, Alert } from "react-native"
 import { router } from "expo-router"
 import { styles } from "./styles"
 import { colors } from "@/styles/colors"
@@ -8,9 +8,24 @@ import { Categories } from "@/components/categories"
 import { Link } from "@/components/link"
 import { Option } from "@/components/option"
 import { categories } from "@/utils/categories"
+import { LinkStorage, linkStorage } from "@/storage/link-storage"
 
 export default function Index() {
     const [category, setCategory] = useState(categories[0].name)
+    const [links, setLinks] = useState<LinkStorage[]>([])
+    async function getLinks() {
+        try {
+            const response = await linkStorage.get()
+            setLinks(response)
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possivel salvar o link")
+            console.log(error) 
+        }
+    }
+
+    useEffect(() => {
+        getLinks()
+    }, [category])
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -22,8 +37,8 @@ export default function Index() {
 
             <Categories onChange={setCategory} selected={category} />
 
-            <FlatList data={["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14"]} keyExtractor={item => item} renderItem={() => (
-                <Link name="Portfolio" url="thiagomota.tech" onDetails={() => console.log("Clicou!")}/>  
+            <FlatList data={links} keyExtractor={item => item.id} renderItem={({item}) => (
+                <Link name={item.name} url={item.url} onDetails={() => console.log("Clicou!")}/>  
             )}
             style={styles.links}
             contentContainerStyle={styles.linksContainer}

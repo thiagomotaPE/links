@@ -7,23 +7,35 @@ import { router } from "expo-router";
 import { Categories } from "@/components/categories";
 import { Input } from "@/components/input";
 import Button from "@/components/button";
+import { linkStorage } from "@/storage/link-storage";
 
 export default function Add() {
     const [category, setCategory] = useState("")
     const [name, setName] = useState("")
     const [url, setUrl] = useState("")
 
-    function handleAdd() {
-        if(!category) {
-            return Alert.alert("Categoria", "Selecione uma categoria")
-        }
-        if(!name.trim()) {
-            return Alert.alert("Name", "Informe o nome")
-        }
-        if(!url.trim()) {
-            return Alert.alert("URl", "Informe a URL")
-        }
-        console.log({name, url})
+    async function handleAdd() {
+        try {
+            if(!category) {
+                return Alert.alert("Categoria", "Selecione uma categoria")
+            }
+            if(!name.trim()) {
+                return Alert.alert("Name", "Informe o nome")
+            }
+            if(!url.trim()) {
+                return Alert.alert("URl", "Informe a URL")
+            }
+
+            await linkStorage.save({
+                id: new Date().getTime().toString(),
+                name, 
+                url,
+                category
+            })
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possivel salvar o link")
+            console.log(error)
+        }     
     }
 
     return (
@@ -39,8 +51,8 @@ export default function Add() {
             
 
             <View style={styles.form}>
-            <Input placeholder="Nome" onChangeText={setName}/>
-                <Input placeholder="URL" onChangeText={setUrl} autoCorrect={false}/>
+                <Input placeholder="Nome" onChangeText={setName}/>
+                <Input placeholder="URL" onChangeText={setUrl} autoCorrect={false} autoCapitalize="none" />
                 <Button title="Adicionar" onPress={handleAdd}/>
             </View>
         </View>
