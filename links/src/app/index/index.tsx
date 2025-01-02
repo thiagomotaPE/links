@@ -1,5 +1,5 @@
 import { useState, useCallback } from "react"
-import { View, Image, TouchableOpacity, FlatList, Modal, Text, Alert } from "react-native"
+import { View, Image, TouchableOpacity, FlatList, Modal, Text, Alert, Linking } from "react-native"
 import { router, useFocusEffect } from "expo-router"
 import { styles } from "./styles"
 import { colors } from "@/styles/colors"
@@ -49,6 +49,16 @@ export default function Index() {
         ])
     }
 
+    async function handleOpen() {
+        try {
+            await Linking.openURL(link.url)
+            setShowModal(false)
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possivel abrir o link")
+            console.log(error) 
+        }
+    }
+
     useFocusEffect(useCallback(() => {
         getLinks()
     }, [category]))
@@ -84,7 +94,7 @@ export default function Index() {
                         <Text style={styles.modaUrl}>{link.url}</Text>
                         <View style={styles.modalFooter}>
                             <Option name="Excluir" icon="delete" variant="secondary" onPress={handleRemove}/>
-                            <Option name="Abrir" icon="language" />
+                            <Option name="Abrir" icon="language" onPress={handleOpen}/>
                         </View>
                     </View>
                 </View>
