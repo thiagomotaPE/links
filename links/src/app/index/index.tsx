@@ -15,13 +15,14 @@ export default function Index() {
     const [links, setLinks] = useState<LinkStorage[]>([])
     const [link, setLink] = useState<LinkStorage>({} as LinkStorage)
     const [showModal, setShowModal] = useState(false)
+
     async function getLinks() {
         try {
             const response = await linkStorage.get()
             const filtered = response.filter((link) => link.category === category)
             setLinks(filtered)
         } catch (error) {
-            Alert.alert("Erro", "Não foi possivel salvar o link")
+            Alert.alert("Erro", "Não foi possivel buscar os link's")
             console.log(error) 
         }
     }
@@ -29,6 +30,23 @@ export default function Index() {
     function handleDetails(selected: LinkStorage) {
         setShowModal(true)
         setLink(selected)
+    }
+
+    async function linkRemove() {
+        try {
+            await linkStorage.remove(link.id)
+            getLinks()
+            setShowModal(false)
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possivel excluir o link")
+            console.log(error) 
+        }
+    }
+    function handleRemove() {
+        Alert.alert("Excluir", "Deseja realmente excluir?", [
+            {style: "cancel", text: "Não"},
+            {text: "Sim", onPress: linkRemove}
+        ])
     }
 
     useFocusEffect(useCallback(() => {
@@ -65,7 +83,7 @@ export default function Index() {
                         <Text style={styles.modaLinkName}>{link.name}</Text>
                         <Text style={styles.modaUrl}>{link.url}</Text>
                         <View style={styles.modalFooter}>
-                            <Option name="Excluir" icon="delete" variant="secondary"/>
+                            <Option name="Excluir" icon="delete" variant="secondary" onPress={handleRemove}/>
                             <Option name="Abrir" icon="language" />
                         </View>
                     </View>
